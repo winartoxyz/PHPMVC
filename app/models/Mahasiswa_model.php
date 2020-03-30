@@ -1,23 +1,20 @@
 <?php
 class Mahasiswa_model{
-    private $dbh; //database handler
-    private $stmt;
+    private $table = 'mahasiswa';
+    private $db;
 
     public function __construct(){
-        //database source name
-        $dsn = 'mysql:host=localhost;dbname=phpmvc';
-        try{
-            $this->dbh = new PDO($dsn, 'root', 'P@ssw0rd');
-        }catch(PDOException $e){
-            die($e->getMesssage());
-        }
-
+        $this->db = new Database;
+    }
+    
+    public function getAllMahasiswa(){
+       $this->db->query('select * from ' . $this->table);
+       return $this->db->resultSet();
     }
 
-    public function getAllMahasiswa(){
-        $this->stmt = $this->dbh->prepare('SELECT * FROM mahasiswa');
-        $this->stmt->execute();
-        return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+    public function getMahasiswaById($id){
+        $this->db->query('select * from '. $this->table . ' where id=:id');
+        $this->db->bind('id', $id);
+        return $this->db->single();
     }
 }
